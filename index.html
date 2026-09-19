@@ -6,9 +6,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Camera</title>
 
@@ -21,6 +19,8 @@ body {
     background: #111;
 
     display: flex;
+
+    flex-direction: column;
 
     justify-content: center;
 
@@ -44,11 +44,21 @@ button {
 
 }
 
-video,
-
-canvas {
+video {
 
     display: none;
+
+}
+
+#photo {
+
+    display: none;
+
+    max-width: 90%;
+
+    border-radius: 12px;
+
+    margin-top: 20px;
 
 }
 
@@ -60,31 +70,21 @@ canvas {
 
 <button id="capture">Click</button>
 
-<video
+<video id="video" autoplay playsinline></video>
 
-    id="video"
+<canvas id="canvas" style="display:none;"></canvas>
 
-    autoplay
-
-    playsinline>
-
-</video>
-
-<canvas id="canvas"></canvas>
+<img id="photo">
 
 <script>
 
-const video =
+const video = document.getElementById("video");
 
-document.getElementById("video");
+const canvas = document.getElementById("canvas");
 
-const canvas =
+const button = document.getElementById("capture");
 
-document.getElementById("canvas");
-
-const button =
-
-document.getElementById("capture");
+const photo = document.getElementById("photo");
 
 let stream = null;
 
@@ -92,11 +92,7 @@ async function startCamera() {
 
     try {
 
-        stream =
-
-        await navigator.mediaDevices
-
-        .getUserMedia({
+        stream = await navigator.mediaDevices.getUserMedia({
 
             video: {
 
@@ -120,17 +116,11 @@ button.addEventListener("click", () => {
 
     if (!stream) return;
 
-    canvas.width =
+    canvas.width = video.videoWidth;
 
-    video.videoWidth;
+    canvas.height = video.videoHeight;
 
-    canvas.height =
-
-    video.videoHeight;
-
-    const ctx =
-
-    canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
 
     ctx.drawImage(
 
@@ -138,32 +128,12 @@ button.addEventListener("click", () => {
 
         0,
 
-        0
+        0,
+
+        canvas.width,
+
+        canvas.height
 
     );
 
-    const image =
-
-    canvas.toDataURL("image/jpeg");
-
-    const link =
-
-    document.createElement("a");
-
-    link.href = image;
-
-    link.download =
-
-    "photo.jpg";
-
-    link.click();
-
-});
-
-startCamera();
-
-</script>
-
-</body>
-
-</html>
+    const image = canvas.toDataURL("image
