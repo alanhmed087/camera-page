@@ -1,41 +1,55 @@
-```html
 <!DOCTYPE html>
-<html lang="ku">
+
+<html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+
+content="width=device-width, initial-scale=1.0">
 
 <title>Camera</title>
 
 <style>
 
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #111;
-  color: white;
-  padding: 25px;
-}
 
-h1 {
-  font-size: 32px;
-}
+    margin: 0;
 
-video {
-  width: 100%;
-  max-width: 500px;
-  border-radius: 15px;
-  background: #222;
+    background: #111;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 100vh;
+
 }
 
 button {
-  margin: 10px;
-  padding: 14px 22px;
-  font-size: 18px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+
+    padding: 16px 28px;
+
+    font-size: 18px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+}
+
+video,
+
+canvas {
+
+    display: none;
+
 }
 
 </style>
@@ -44,44 +58,112 @@ button {
 
 <body>
 
-<h1>کامێرا 📷</h1>
+<button id="capture">Click</button>
 
-<video id="video" autoplay playsinline></video>
+<video
 
-<br>
+    id="video"
 
-<button onclick="startCamera()">
-کردنەوەی کامێرا 📷
-</button>
+    autoplay
+
+    playsinline>
+
+</video>
+
+<canvas id="canvas"></canvas>
 
 <script>
 
+const video =
+
+document.getElementById("video");
+
+const canvas =
+
+document.getElementById("canvas");
+
+const button =
+
+document.getElementById("capture");
+
+let stream = null;
+
 async function startCamera() {
 
-  try {
+    try {
 
-    const stream =
-      await navigator.mediaDevices.getUserMedia({
-        video: true
-      });
+        stream =
 
-    document.getElementById("video").srcObject = stream;
+        await navigator.mediaDevices
 
-  } catch (error) {
+        .getUserMedia({
 
-    alert("تکایە مۆڵەتی کامێرا بدە.");
+            video: {
 
-    console.error(error);
+                facingMode: "user"
 
-  }
+            }
+
+        });
+
+        video.srcObject = stream;
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
 
 }
 
-window.addEventListener("load", startCamera);
+button.addEventListener("click", () => {
+
+    if (!stream) return;
+
+    canvas.width =
+
+    video.videoWidth;
+
+    canvas.height =
+
+    video.videoHeight;
+
+    const ctx =
+
+    canvas.getContext("2d");
+
+    ctx.drawImage(
+
+        video,
+
+        0,
+
+        0
+
+    );
+
+    const image =
+
+    canvas.toDataURL("image/jpeg");
+
+    const link =
+
+    document.createElement("a");
+
+    link.href = image;
+
+    link.download =
+
+    "photo.jpg";
+
+    link.click();
+
+});
+
+startCamera();
 
 </script>
 
 </body>
 
 </html>
-```
